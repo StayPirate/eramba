@@ -1,0 +1,4 @@
+database.php
+default-ssl.conf
+certs/*.cert
+certs/*.key
