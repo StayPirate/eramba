@@ -4,8 +4,14 @@ Copy certificates into `certs` folder.
  * `domain.tld.cert` the public [self]signed certificate.
  * `domain.tld.key` the private key.
 
-Adjust `default-ssl.conf.example` and rename it `default-ssl.conf`, do the same with `database.php.example` and rename it `database.php`. Launch as:
+Adjust `default-ssl.conf` and `database.php` with your data. Launch as:
 
-    docker container run --rm -v $(pwd)/certs:/certs -p 80:8080 -p 443:8443 tuxmealux/eramba-community:latest
+    docker container run \
+            -v $(pwd)/default-ssl.conf:/etc/apache2/sites-enabled/default-ssl.conf \
+            -v $(pwd)/database.php:/var/www/html/app/Config/database.php \
+            -v $(pwd)/certs:/certs \
+            -p 80:8080 \
+            -p 443:8443 \
+        tuxmealux/eramba-community:latest
 
-In oreder to properly work it requires a mariadb backend, you can get everything ready to run [here](https://github.com/staypirate/eramba-grc).
+In oreder to properly work it requires a mariadb backend (which is not present), you can get everything ready to run using this [docker-compose](https://github.com/staypirate/eramba-grc) file.

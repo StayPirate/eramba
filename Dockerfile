@@ -67,9 +67,6 @@ RUN \
     sed -i 's/443/8443/g' /etc/apache2/ports.conf && \
     rm /etc/apache2/sites-enabled/*
 
-COPY default-ssl.conf /etc/apache2/sites-enabled/
-COPY --chown=$HTTPD_USER:$HTTPD_USER ./database.php /var/www/html/app/Config/
-
 EXPOSE 8080/tcp
 EXPOSE 8443/tcp
 
