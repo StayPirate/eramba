@@ -1,4 +1,4 @@
-# Eramba Community Edition
+# Eramba Enterprise Edition
 
 Copy certificates into `certs` folder.
  * `domain.tld.cert` the public [self]signed certificate.
