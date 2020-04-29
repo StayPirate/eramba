@@ -32,7 +32,6 @@ RUN apt-get update && \
 # Install Eramba, configure Apache2 and PHP
 RUN \
     # Uncompress eramba webapp (Check the comment above out)
-    #curl -o eramba_latest.tgz ${DOWNLOAD_LINK} && \
     #tar zxvf /eramba_latest.tgz -C /var/www/html/ && \
     #mv /var/www/html/${ERAMBA_DIR}/* /var/www/html/${ERAMBA_DIR}/.htaccess /var/www/html/ && \
     #rm -r /var/www/html/${ERAMBA_DIR} /eramba_latest.tgz && \
