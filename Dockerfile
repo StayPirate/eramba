@@ -5,11 +5,14 @@ LABEL description="Eramba is a popular open Governance, Risk and Compliance (GRC
 LABEL website="https://www.eramba.org"
 
 ARG HTTPD_USER=www-data
-ARG DOWNLOAD_LINK="https://downloadseramba.s3-eu-west-1.amazonaws.com/CommunityTGZ/latest.tgz"
 # Name of the main directory inside the archive
-ARG ERAMBA_DIR=eramba_community
+ARG ERAMBA_DIR=eramba_v2
 
 WORKDIR /
+
+# I'm copying the whole uncompressed directory since the official provided tgz is corrupted (ಠ╭╮ಠ)
+#COPY enterprise/eramba_latest.tgz /
+COPY --chown=$HTTPD_USER:$HTTPD_USER ./enterprise/${ERAMBA_DIR} /var/www/html/
 
 # Install Eramba dependencies
 RUN apt-get update && \
@@ -28,11 +31,11 @@ RUN apt-get update && \
 
 # Install Eramba, configure Apache2 and PHP
 RUN \
-    # Uncompress eramba webapp
-    curl -o eramba_latest.tgz ${DOWNLOAD_LINK} && \
-    tar zxvf /eramba_latest.tgz -C /var/www/html/ && \
-    mv /var/www/html/${ERAMBA_DIR}/* /var/www/html/${ERAMBA_DIR}/.htaccess /var/www/html/ && \
-    rm -r /var/www/html/${ERAMBA_DIR} /eramba_latest.tgz && \
+    # Uncompress eramba webapp (Check the comment above out)
+    #curl -o eramba_latest.tgz ${DOWNLOAD_LINK} && \
+    #tar zxvf /eramba_latest.tgz -C /var/www/html/ && \
+    #mv /var/www/html/${ERAMBA_DIR}/* /var/www/html/${ERAMBA_DIR}/.htaccess /var/www/html/ && \
+    #rm -r /var/www/html/${ERAMBA_DIR} /eramba_latest.tgz && \
     chown ${HTTPD_USER}:${HTTPD_USER} /var/www/html/* && \
     \
     # Configure php.ini following the Eramba's requirements
