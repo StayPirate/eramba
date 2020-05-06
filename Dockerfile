@@ -10,9 +10,7 @@ ARG ERAMBA_DIR=eramba_v2
 
 WORKDIR /
 
-# I'm copying the whole uncompressed directory since the official provided tgz is corrupted (ಠ╭╮ಠ)
-#COPY enterprise/eramba_latest.tgz /
-COPY --chown=$HTTPD_USER:$HTTPD_USER ./enterprise/${ERAMBA_DIR} /var/www/html/
+COPY enterprise/eramba_latest.tar.gz /
 
 # Install Eramba dependencies
 RUN apt-get update && \
@@ -32,9 +30,9 @@ RUN apt-get update && \
 # Install Eramba, configure Apache2 and PHP
 RUN \
     # Uncompress eramba webapp (Check the comment above out)
-    #tar zxvf /eramba_latest.tgz -C /var/www/html/ && \
-    #mv /var/www/html/${ERAMBA_DIR}/* /var/www/html/${ERAMBA_DIR}/.htaccess /var/www/html/ && \
-    #rm -r /var/www/html/${ERAMBA_DIR} /eramba_latest.tgz && \
+    tar zxvf /eramba_latest.tar.gz -C /var/www/html/ && \
+    mv /var/www/html/${ERAMBA_DIR}/* /var/www/html/${ERAMBA_DIR}/.htaccess /var/www/html/ && \
+    rm -r /var/www/html/${ERAMBA_DIR} /eramba_latest.tar.gz && \
     chown ${HTTPD_USER}:${HTTPD_USER} /var/www/html/* && \
     \
     # Configure php.ini following the Eramba's requirements
