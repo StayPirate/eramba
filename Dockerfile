@@ -33,7 +33,8 @@ RUN \
     tar zxvf /eramba_latest.tar.gz -C /var/www/html/ && \
     mv /var/www/html/${ERAMBA_DIR}/* /var/www/html/${ERAMBA_DIR}/.htaccess /var/www/html/ && \
     rm -r /var/www/html/${ERAMBA_DIR} /eramba_latest.tar.gz && \
-    chown ${HTTPD_USER}:${HTTPD_USER} /var/www/html/* && \
+    chown -R ${HTTPD_USER}:${HTTPD_USER} /var/www/html/* && \
+    chown ${HTTPD_USER}:${HTTPD_USER} /var/www/html/.htaccess && \
     \
     # Configure php.ini following the Eramba's requirements
     mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
