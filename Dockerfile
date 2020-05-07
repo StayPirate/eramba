@@ -30,7 +30,7 @@ RUN apt-get update && \
 # Install Eramba, configure Apache2 and PHP
 RUN \
     # Uncompress eramba webapp
-    tar zxvf /eramba_latest.tar.gz -C /var/www/html/ && \
+    tar zxf /eramba_latest.tar.gz -C /var/www/html/ >/dev/null 2>&1 && \
     mv /var/www/html/${ERAMBA_DIR}/* /var/www/html/${ERAMBA_DIR}/.htaccess /var/www/html/ && \
     rm -r /var/www/html/${ERAMBA_DIR} /eramba_latest.tar.gz && \
     chown -R ${HTTPD_USER}:${HTTPD_USER} /var/www/html/* && \
