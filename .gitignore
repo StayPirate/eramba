@@ -1,5 +1,4 @@
-database.php.*
-default-ssl.conf.*
-certs/*.cert
-certs/*.key
+certs/*
+!certs/README
 enterprise/*
+!enterprise/README
