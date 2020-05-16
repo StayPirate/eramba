@@ -22,12 +22,14 @@ RUN apt-get update && \
         libldap2-dev \
         libicu-dev \
         libfreetype6-dev \
-        libjpeg-dev && \
+        libjpeg-dev \
+        sudo \
+        cron && \
     # Required PHP extensions
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) zip bz2 gd exif ldap intl pdo_mysql
 
-# Install Eramba, configure Apache2 and PHP
+# Install Eramba, configure Apache2, PHP and Cron
 RUN \
     # Uncompress eramba webapp
     tar zxf /eramba_latest.tar.gz -C /var/www/html/ >/dev/null 2>&1 && \
@@ -67,7 +69,18 @@ RUN \
     sed -i 's/^\(TraceEnable\s*\).*$/\1Off/' /etc/apache2/conf-enabled/security.conf && \
     sed -i 's/80/8080/g' /etc/apache2/ports.conf && \
     sed -i 's/443/8443/g' /etc/apache2/ports.conf && \
-    rm /etc/apache2/sites-enabled/*
+    rm /etc/apache2/sites-enabled/* && \
+    # Configure Cron
+    #mkdir -p /var/spool/cron/crontabs && \
+    echo '\
+    @hourly su -s /bin/bash -c "/var/www/html/app/Console/cake cron job hourly" www-data\n\
+    @daily su -s /bin/bash -c "/var/www/html/app/Console/cake cron job daily" www-data\n\
+    @yearly su -s /bin/bash -c "/var/www/html/app/Console/cake cron job yearly" www-data' \
+    >> /var/spool/cron/crontabs/root && \
+    sed -i 's/^[[:space:]]*//g' /var/spool/cron/crontabs/root && \
+    echo "www-data ALL=(root) NOPASSWD: /usr/sbin/cron" > /etc/sudoers.d/00_cron && \
+    chmod 440 /etc/sudoers.d/00_cron
+
 
 COPY apache/default-ssl.conf /etc/apache2/sites-enabled/
 
@@ -75,3 +88,5 @@ EXPOSE 8080/tcp
 EXPOSE 8443/tcp
 
 USER www-data
+
+CMD [ "sh", "-c", "sudo cron && apache2-foreground" ]
