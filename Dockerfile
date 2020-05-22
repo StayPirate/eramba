@@ -69,7 +69,7 @@ RUN \
     sed -i 's/^\(TraceEnable\s*\).*$/\1Off/' /etc/apache2/conf-enabled/security.conf && \
     sed -i 's/80/8080/g' /etc/apache2/ports.conf && \
     sed -i 's/443/8443/g' /etc/apache2/ports.conf && \
-    rm /etc/apache2/sites-enabled/* && \
+    sed -i 's/80/8080/g' /etc/apache2/sites-enabled/* && \
     # Configure Cron
     #mkdir -p /var/spool/cron/crontabs && \
     echo '\
@@ -81,11 +81,7 @@ RUN \
     echo "www-data ALL=(root) NOPASSWD: /usr/sbin/cron" > /etc/sudoers.d/00_cron && \
     chmod 440 /etc/sudoers.d/00_cron
 
-
-COPY apache/default-ssl.conf /etc/apache2/sites-enabled/
-
 EXPOSE 8080/tcp
-EXPOSE 8443/tcp
 
 USER www-data
 
