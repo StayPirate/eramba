@@ -73,9 +73,9 @@ RUN \
     # Configure Cron
     #mkdir -p /var/spool/cron/crontabs && \
     echo '\
-    @hourly su -s /bin/bash -c "/var/www/html/app/Console/cake cron job hourly" www-data\n\
-    @daily su -s /bin/bash -c "/var/www/html/app/Console/cake cron job daily" www-data\n\
-    @yearly su -s /bin/bash -c "/var/www/html/app/Console/cake cron job yearly" www-data' \
+    @hourly /var/www/html/app/Console/cake cron job hourly\n\
+    @daily /var/www/html/app/Console/cake cron job daily\n\
+    @yearly /var/www/html/app/Console/cake cron job yearly' \
     >> /var/spool/cron/crontabs/root && \
     sed -i 's/^[[:space:]]*//g' /var/spool/cron/crontabs/root && \
     echo "www-data ALL=(root) NOPASSWD: /usr/sbin/cron" > /etc/sudoers.d/00_cron && \
