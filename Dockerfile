@@ -71,13 +71,15 @@ RUN \
     sed -i 's/443/8443/g' /etc/apache2/ports.conf && \
     rm /etc/apache2/sites-enabled/* && \
     # Configure Cron
-    #mkdir -p /var/spool/cron/crontabs && \
     echo '\
-    @hourly su -s /bin/bash -c "/var/www/html/app/Console/cake cron job hourly" www-data\n\
-    @daily su -s /bin/bash -c "/var/www/html/app/Console/cake cron job daily" www-data\n\
-    @yearly su -s /bin/bash -c "/var/www/html/app/Console/cake cron job yearly" www-data' \
-    >> /var/spool/cron/crontabs/root && \
-    sed -i 's/^[[:space:]]*//g' /var/spool/cron/crontabs/root && \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n\
+    0 * * * * /var/www/html/app/Console/cake cron job hourly\n\
+    0 0 * * * /var/www/html/app/Console/cake cron job daily\n\
+    0 0 1 1 * /var/www/html/app/Console/cake cron job yearly\n' \
+    >> /var/spool/cron/crontabs/www-data && \
+    sed -i 's/^[[:space:]]*//g' /var/spool/cron/crontabs/www-data && \
+    chown www-data:crontab /var/spool/cron/crontabs/www-data && \
+    chmod 600 /var/spool/cron/crontabs/www-data && \
     echo "www-data ALL=(root) NOPASSWD: /usr/sbin/cron" > /etc/sudoers.d/00_cron && \
     chmod 440 /etc/sudoers.d/00_cron
 
